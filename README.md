@@ -135,3 +135,4 @@ callback && callback(str,callbackName);
 
 > 如果是这么写success:function(data){conosle.log(data);}
 会报一个success is undefined错误，success必须先定义
+
