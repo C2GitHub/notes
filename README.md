@@ -1,6 +1,4 @@
 # notes
-#
-#
 # 1. localStorage、sessionStorage、Cookie的区别及用法
 
 >### localStorage、sessionStorage、Cookie共同点：都是保存数据在浏览器端，且同源的。
@@ -91,7 +89,7 @@ init.error();
 }
 ```
 
-## JSONP 原理及封装
+## 4. JSONP 原理及封装
 ```
 function success(data){
 console.log(data);
@@ -136,3 +134,195 @@ callback && callback(str,callbackName);
 > 如果是这么写success:function(data){conosle.log(data);}
 会报一个success is undefined错误，success必须先定义
 
+## 5. 前端框架技术选型
+
+> 1. Vue更加轻量、gzip后大小只有20k+
+> 2.  Vue.js更容易上手、学习曲线平稳 
+> 3. 吸取了angular 和 react两家之长、入angular指令和react模块化开发
+
+##  6. JS中使用typeof 能得到的那些类型的值?
+
+> 1.number  2.string   3.boolean  4.undinfed   5. object   6.Function  7.Symbol
+
+##  7.何时使用 === 何时使用 ==？
+
+> 1. == 判断两变量数值是否相等、会对数值进行隐式数据转换。
+>
+> 2. === 不仅判断两变量数值是否相等、并且也要等数据类型进行判断。
+>
+>    === 的判断条件比==更加严格。一般如果判断变量属性为null 或undefined是用==，其他全部用===。
+
+## 8. JS 中有哪些内置函数 --数据封装类对象
+
+> 1. Object
+> 2. Array
+> 3. String
+> 4. Number
+> 5. Boolean
+> 6. Function
+> 7. Date
+> 8. Regexp
+> 9. Error
+> 10. Math(内置对象)
+> 11. JSON(内置对象)
+
+## 9. 如何准确判断一个变量是数组类型
+
+```
+
+```
+
+```JavaScript
+var arr= []
+arr instanceof Array // true
+typeof arr // Object 无法准确判断
+```
+
+```
+
+```
+
+## 10. 描述new一个对象的过程
+
+> 1. 创建一个新对象
+> 2. this指向这个新对象
+> 3. 执行代码、既对this赋值
+> 4. 返回this
+
+## 11. 源码分析
+
+> 慕课网课程“zepto设计和源码分析” 、jQuery源码解读
+
+## 12. 原型链继承
+
+```javascript
+// 原型链继承
+function Ele() {
+
+}
+
+Ele.prototype.html = function (val) {
+    if (val) {
+        this.ele.innerHTML = val
+        return this // 链式调用
+    } else {
+        return this.ele.innerHTML
+    }
+}
+
+Ele.prototype.on = function (type, fn) {
+    this.ele.addEventListener(type, fn)
+    return this // 链式调用
+}
+
+function _$(id) {
+    this.ele = document.getElementById(id)
+}
+
+_$.prototype = new Ele()
+_$.prototype.constructor = _$
+
+var div = new _$('lg')
+div.html('text')
+div.on('click', function () {
+    console.log('click');
+})
+```
+
+##  13.闭包的使用场景
+
+> 1. 函数作为返回值
+>
+> ```javascript
+> // 函数作为返回值
+> function fn() {
+>     var a = 100
+>     return function () {
+>         console.log(a);
+>     }
+> }
+> 
+> var f = fn()
+> f()
+> ```
+>
+> 2.  函数作为参数传递
+>
+>    ```javascript
+>    // 函数作为参数传递
+>    function fn(callback) {
+>        var a = 100
+>        callback()
+>    }
+>    
+>    fn(function () {
+>        console.log(a);
+>    })
+>    ```
+>
+>    
+>
+> 3. 闭包使用示例
+>
+>    ```javascript
+>    // 1.闭包使用示例
+>    function creatEle() {
+>        var ul = document.createElement('ul')
+>        for (var i = 0; i < 10; i++) {
+>            var li = document.createElement('li')
+>            ;(function (i) {
+>                li.innerText = 'li content ' + i
+>                li.addEventListener('click', function () {
+>                    alert('click' + i)
+>                })
+>                ul.appendChild(li)
+>            })(i)
+>        }
+>    
+>        document.body.appendChild(ul)
+>    }
+>    creatEle()
+>    
+>    // 2.闭包使用示例
+>    function isFirstLoad() {
+>        var _list = []
+>    
+>        return function (id) {
+>            if (_list.indexOf(id) >= 0 ) {
+>                return false
+>            } else {
+>                _list.push(id)
+>                return true
+>            }
+>        }
+>    }
+>    
+>    var firstLoad = isFirstLoad()
+>    console.log(firstLoad(10)) // true
+>    console.log(firstLoad(10)) // false
+>    console.log(firstLoad(20)) // true
+>    console.log(firstLoad(20)) // false
+>    ```
+
+## 14. this的使用场景
+
+> this 指向的是拥有当前执行环境的对象
+
+* 作为构造函数执行  this指向实例对象
+* 作为对象属性执行  this指向当前对象
+* 作为普通函数执行  this指向window
+* call  apply  bind 
+
+## 15. 作用域链的理解
+
+> 当代码在一个环境中执行时、会创建一个变量对象的作用域链。作用域链的用途，是保证了执行环境中有权访问的所有变量和函数的有序访问。作用域链的最前端，始终是当前执行的代码所在环境的变量对象。而作用域链的变量搜索机制是，如果当前活动对象中有目标变量、则直接调用。如果没有，则会向所包含它是外部环境进行一级一级向后查找，一直延续到全局执行环境。如果直到全局还未找到，则会报ReferenceError错误。
+
+## 16. 对异步和同步的理解
+
+> 同步会阻塞后面代码的执行、而异步不会
+
+> 前端使用异步的场景
+
+* 1. 定时任务： setTimeout setInterval
+  2. 网络请求： ajax请求，动态资源加载
+  3. 事件绑定
