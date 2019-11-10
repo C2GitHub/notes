@@ -1,39 +1,45 @@
 # notes
-# 1. localStorage、sessionStorage、Cookie的区别及用法
+## localStorage、sessionStorage、Cookie的区别及用法
 
->### localStorage、sessionStorage、Cookie共同点：都是保存数据在浏览器端，且同源的。
+**localStorage、sessionStorage、Cookie共同点：都是保存数据在浏览器端，且同源的。**
 
-### webstorage
-> webstorage是本地存储，存储在客户端，包括localStorage和sessionStorage。
+1. webstorage
 
-### localStorage
-> localStorage生命周期是永久，这意味着除非用户显示在浏览器提供的UI上清除localStorage信息，否则这些信息将永远存在。存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。
+webstorage是本地存储，存储在客户端，包括localStorage和sessionStorage。
 
-### sessionStorage
-> sessionStorage仅在当前会话下有效，关闭页面或浏览器后被清除。存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。
+2.  localStorage
+
+localStorage生命周期是永久，这意味着除非用户显示在浏览器提供的UI上清除localStorage信息，否则这些信息将永远存在。存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。
+
+3. sessionStorage
+
+sessionStorage仅在当前会话下有效，关闭页面或浏览器后被清除。存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。
 
 #### 作用域不同
-> 不同浏览器无法共享localStorage或sessionStorage中的信息。相同浏览器的同源页面间可以共享相同的 localStorage，但无法共享sessionStorage的信息。
+​	不同浏览器无法共享localStorage或sessionStorage中的信息。相同浏览器的同源页面间可以共享相同的 localStorage，但无法共享sessionStorage的信息。
 
 ### Cookie
-> cookie一般用于储存与用户相关的一些数据信息，每次HTTP请求都会携带cookie数据到服务器端。且每条cookie都具有自己的生命期，为只在设置的cookie过期时间之前有效。存放数据大小为4K左右 。有个数限制（各浏览器不同），一般不能超过20个。
-####使用cookie主要要考虑其两大特性：
+cookie一般用于储存与用户相关的一些数据信息，每次HTTP请求都会携带cookie数据到服务器端。且每条cookie都具有自己的生命期，为只在设置的cookie过期时间之前有效。存放数据大小为4K左右 。有个数限制（各浏览器不同），一般不能超过20个。
+
+* 使用cookie主要要考虑其两大特性：
+
 1. 因为每次HTTP请求都携带会cookie到服务器端，如果使用cookie保存过多数据势必会增大带宽，带来性能问题。
 2. 安全性，因为cookie存储在浏览器端，所以就存在被拦截的可能。所以不能cookie来保存用户一些太私密的信息。可以用服务器端session来保存。
 
-## 2. get和post的初高级区别
-> 1.get长度有限，而post长度可以更长
-> 2.get的请求包含参数将会被cache 但是post 不会
-> 3.get的url能被存为标签但是post不能
+##  get和post的区别
 
-> 4.get只能进行url编码，post则可以多种编码
-> 5.get只接受ASCII字符 但是post没有限制
+1. get长度有限，而post长度可以更长
+2. get的请求包含参数将会被cache 但是post 不会
+3. get的url能被存为标签但是post不能
 
-> 6.get后退无害，但是post会出发再次请求
+4. get只能进行url编码，post则可以多种编码
+5. get只接受ASCII字符 但是post没有限制
 
-> 7.get比post的安全性差，因为get参数直接暴露在url中
+6. get后退无害，但是post会出发再次请求
 
-## 3. ajax 封装
+7. get比post的安全性差，因为get参数直接暴露在url中
+
+## ajax 封装
 ```javascript
 function ajax(option){
 //用户配置option 默认配置init
@@ -89,7 +95,7 @@ init.error();
 }
 ```
 
-## 4. JSONP 原理及封装
+##  JSONP 原理及封装
 ```
 function success(data){
 console.log(data);
@@ -131,69 +137,83 @@ callback && callback(str,callbackName);
 }
 ```
 
-> 如果是这么写success:function(data){conosle.log(data);}
+如果是这么写success:function(data){conosle.log(data);}
 会报一个success is undefined错误，success必须先定义
 
-## 5. 前端框架技术选型
+## 前端框架技术选型
 
-> 1. Vue更加轻量、gzip后大小只有20k+
-> 2.  Vue.js更容易上手、学习曲线平稳 
-> 3. 吸取了angular 和 react两家之长、入angular指令和react模块化开发
+1. Vue更加轻量、gzip后大小只有20k+
 
-##  6. JS中使用typeof 能得到的那些类型的值?
+2. Vue.js更容易上手、学习曲线平稳 
 
-> 1.number  2.string   3.boolean  4.undinfed   5. object   6.Function  7.Symbol
+3. 吸取了angular 和 react两家之长、入angular指令和react模块化开发
 
-##  7.何时使用 === 何时使用 ==？
+##   JS中使用typeof 能得到的那些类型的值?
 
-> 1. == 判断两变量数值是否相等、会对数值进行隐式数据转换。
->
-> 2. === 不仅判断两变量数值是否相等、并且也要等数据类型进行判断。
->
->    === 的判断条件比==更加严格。一般如果判断变量属性为null 或undefined是用==，其他全部用===。
+1.number  2.string   3.boolean  4.undinfed   5. object   6.Function  7.Symbol
 
-## 8. JS 中有哪些内置函数 --数据封装类对象
+##  何时使用 === 何时使用 ==？
 
-> 1. Object
-> 2. Array
-> 3. String
-> 4. Number
-> 5. Boolean
-> 6. Function
-> 7. Date
-> 8. Regexp
-> 9. Error
-> 10. Math(内置对象)
-> 11. JSON(内置对象)
+* == 判断两变量数值是否相等、会对数值进行隐式数据转换。
 
-## 9. 如何准确判断一个变量是数组类型
+* === 不仅判断两变量数值是否相等、并且也要等数据类型进行判断。
 
-```
+* === 的判断条件比==更加严格。一般如果判断变量属性为null 或undefined是用==，其他全部用===。
 
-```
+##  JS 中有哪些内置函数 --数据封装类对象
+
+* Object
+
+* Array
+
+* String
+
+* Number
+
+* Boolean
+
+* Function
+
+* Date
+
+* Regexp
+
+* Error
+
+* Math(内置对象)
+
+* JSON(内置对象)
+
+## 如何准确判断一个变量是数组类型
 
 ```JavaScript
 var arr= []
 arr instanceof Array // true
+Object.prototype.toString.call(arr) === '[object Array]';
 typeof arr // Object 无法准确判断
 ```
 
-```
+## instanceof原理
 
-```
+使用：objA instanceof obj2
 
-## 10. 描述new一个对象的过程
+原理：objA的原型链中是否能找到obj2的原型
 
-> 1. 创建一个新对象
-> 2. this指向这个新对象
-> 3. 执行代码、既对this赋值
-> 4. 返回this
+## 描述new一个对象的过程
 
-## 11. 源码分析
+* 在内存中申请一块空间，生成一新对象
 
-> 慕课网课程“zepto设计和源码分析” 、jQuery源码解读
+* 将this指向这个新对象
 
-## 12. 原型链继承
+* 对this赋值，建立原型链接 obj.__proto__ = Construtor.prototype
+
+* 返回这个新对象
+
+## 源码分析
+
+慕课网课程“zepto设计和源码分析” 、jQuery源码解读
+
+## 原型链继承
 
 ```javascript
 // 原型链继承
@@ -229,7 +249,7 @@ div.on('click', function () {
 })
 ```
 
-##  13.闭包的使用场景
+##  闭包的使用场景
 
 > 1. 函数作为返回值
 >
@@ -304,25 +324,91 @@ div.on('click', function () {
 >    console.log(firstLoad(20)) // false
 >    ```
 
-## 14. this的使用场景
+## this的使用场景
 
-> this 指向的是拥有当前执行环境的对象
+this 指向的是拥有当前执行环境的对象（当前正在执行的活动对象）
 
-* 作为构造函数执行  this指向实例对象
-* 作为对象属性执行  this指向当前对象
-* 作为普通函数执行  this指向window
+* 构造函数中的this：  this指向实例对象
+* 对象属性中的this：  this指向当前对象
+* 普通函数中的this：  this指向window
+* 定时器中的this： this指向window
+* 事件绑定中的this：this指向绑定事件的对象
+* 箭头函数中的this：this执行函数定义时的作用域
 * call  apply  bind 
 
-## 15. 作用域链的理解
+## 作用域
 
-> 当代码在一个环境中执行时、会创建一个变量对象的作用域链。作用域链的用途，是保证了执行环境中有权访问的所有变量和函数的有序访问。作用域链的最前端，始终是当前执行的代码所在环境的变量对象。而作用域链的变量搜索机制是，如果当前活动对象中有目标变量、则直接调用。如果没有，则会向所包含它是外部环境进行一级一级向后查找，一直延续到全局执行环境。如果直到全局还未找到，则会报ReferenceError错误。
+变量和声明的作用范围。
 
-## 16. 对异步和同步的理解
+* 函数作用域
+* 块级作用域（es6）
 
-> 同步会阻塞后面代码的执行、而异步不会
+## 作用域链的理解
 
-> 前端使用异步的场景
+* 作用域链：确定了变量的使用范围和变量的查找机制，保证了变量的有序访问
+  * 使用范围
+    * 变量如果在全局定义，则任何地方都能访问使用
+    * 变量如果在局部作用域中定义，则该变量只能在该作用域以及该作用域包含的作用域中可以访问
+  * 查找机制
+    * 变量在使用的时候首先会在自己的当前作用域内查找，如果找到直接使用
+    * 如果未找到则会一级一级向上查找，一直查找到全局（window）作用域。
+    * 该过程只要找到该变量，就会直接使用并停止搜索，如果找到全局作用域还未找到，则会报引用错误
 
-* 1. 定时任务： setTimeout setInterval
-  2. 网络请求： ajax请求，动态资源加载
-  3. 事件绑定
+## 对异步和同步的理解
+
+* 同步会阻塞后面代码的执行、而异步不会
+
+* 前端使用异步的场景
+  * 定时任务： setTimeout setInterval
+  * 网络请求： ajax请求，动态资源加载
+  * 事件绑定
+
+## 节流与防抖
+
+* 节流
+
+  ```
+  function throttle(fn ,wait) {
+    let prev = Date.now();
+    return function () {
+      let context = this;
+      let arg = arguments;
+      let now = Date.now();
+      if (now - prev > wait) {
+        fn.apply(context, arg);
+        prev = now;
+      }
+    }
+  }
+  
+  function handle() {
+    console.log(Math.random());
+  }
+  window.onscroll = throttle(handle, 1000)
+  ```
+
+* 防抖
+
+  ```
+  function debounce(fn, wait) {
+    let timer = null;
+    return function () {
+      let context = this;
+      let arg = arguments;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () {
+        fn.apply(context, arg);
+      }, wait)
+    }
+  }
+  ```
+
+## 对象拷贝
+
+* 浅拷贝： 以赋值形式的拷贝对象，拷贝的是对象的引用地址
+  * Object.assign(target, source[, ...])
+  * 展开运算符...
+
+* 深拷贝：建立一个新对象并赋值，修改时源对象不受影响
+  * JSON.parse(JSON.stringry( obj ))：性能最好
+  * 递归判断类型，赋值
