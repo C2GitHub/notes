@@ -411,4 +411,52 @@ this 指向的是拥有当前执行环境的对象（当前正在执行的活动
 
 * 深拷贝：建立一个新对象并赋值，修改时源对象不受影响
   * JSON.parse(JSON.stringry( obj ))：性能最好
-  * 递归判断类型，赋值
+  * 递归判断类型，赋值 
+
+## 伪数组转数组
+
+* Array.prototype.slice(likeArr)
+* Array.from(likeArr)
+* [...likeArr]
+
+```
+var nodes = document.getElementsByTagName('*');
+
+// 1.
+var nodeArr1 = [].slice.call(nodes)
+
+//2. 
+var nodeArr2 = [...nodes]
+
+//3. 
+var nodeArr3 = Array.from(nodes)
+console.log(nodeArr instanceof Array)
+```
+
+## 数组去重
+
+* ES6 new Set()
+* 数组遍历赋值判断
+
+
+
+
+
+
+
+
+
+
+
+[](https://www.evernote.com/shard/s276/sh/4c926b86-f8c2-4a0e-9916-
+f053a77e221c/53c09ab091b793bbf55d9798ce39b6dd)
+
+
+
+[](https://www.evernote.com/shard/s276/sh/e4cc7abe-2a71-4113-ac7ca236bd6a8438/
+5760a35ca327854a6249586b2ec8f09d)
+
+
+
+[](https://www.evernote.com/shard/s276/sh/f843d47d-4b9a-436e-b0e9-
+105c5c9c1c26/71e9cf0204bc0bb3ac8c40347d5acf78)
