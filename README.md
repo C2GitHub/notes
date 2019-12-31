@@ -41,100 +41,106 @@ cookie一般用于储存与用户相关的一些数据信息，每次HTTP请求�
 
 ## ajax 封装
 ```javascript
-function ajax(option){
-//用户配置option 默认配置init
-var init = {
-type:'get',
-async:true,
-url:'',
-success: function () { },
-error: function () { },
-data:{},
-beforeSend: function () {
-console.log('发送前...');
-return false;
+function ajax(option) {
+  //用户配置option 默认配置init
+  var init = {
+    type: 'get',
+    async: true,
+    url: '',
+    success: function() {},
+    error: function() {},
+    data: {},
+    beforeSend: function() {
+      console.log('发送前...')
+      return false
+    }
+  }
+  //TODO step1: 合并参数
+  for (k in option) {
+    init[k] = option[k]
+  }
+  //TODO step2: 参数转换
+  var params = ''
+  for (k in init.data) {
+    params += '&' + k + '=' + init.data[k]
+  }
+  var xhr = new XMLHttpRequest()
+  // type url
+  //TODO step3: 区分get和post,进行传参
+  var url = init.url + '?__=' + new Date().getTime()
+  //TODO step4: 发送前
+  var flag = init.beforeSend()
+  if (!flag) {
+    return
+  }
+  if (init.type.toLowerCase() == 'get') {
+    url += params
+    xhr.open(init.type, url, init.async)
+    xhr.send()
+  } else {
+    xhr.open(init.type, url, init.async)
+    xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+    xhr.send(params.substr(1))
+  }
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      if ((xhr.status >= 200 && xhr.status <= 207) || xhr.status == 304) {
+        init.success(xhr.responseText)
+      } else {
+        //error
+        init.error()
+      }
+    }
+  }
 }
-};
-//TODO step1: 合并参数
-for(k in option){
-init[k] = option[k];
-}
-//TODO step2: 参数转换
-var params = '';
-for(k in init.data){
-params += '&'+k+'='+init.data[k];
-}
-var xhr = new XMLHttpRequest();
-// type url
-//TODO step3: 区分get和post,进行传参
-var url = init.url+'?__='+new Date().getTime();
-//TODO step4: 发送前
-var flag = init.beforeSend();
-if(!flag){
-return;
-}
-if(init.type.toLowerCase() == 'get'){
-url += params;
-xhr.open(init.type,url,init.async);
-xhr.send();
-}else{
-xhr.open(init.type,url,init.async);
-xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
-xhr.send(params.substr(1));
-}
-xhr.onreadystatechange = function () {
-if(xhr.readyState == 4){
-if(xhr.status>=200 && xhr.status<=207 || xhr.status==304){
-init.success(xhr.responseText);
-}else{
-//error
-init.error();
-}
-}
-}
-}
+
 ```
 
 ##  JSONP 原理及封装
-```
-function success(data){
-console.log(data);
+```javascript
+function success(data) {
+  console.log(data)
 }
 jsonp({
-url:'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
-type:'get',
-data:{
-wd:'jsonp'
-},
-callback :'cb',
-success:success
-});
-function jsonp(options){
-var url = options.url;
-var data = options.data;
+  url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+  type: 'get',
+  data: {
+    wd: 'jsonp'
+  },
+  callback: 'cb',
+  success: success
+})
+function jsonp(options) {
+  var url = options.url
+  var data = options.data
 
-format(data,options,function(str,callback){
-var oBody = document.getElementsByTagName('body')[0];
-var oScript = document.createElement('script');
-oScript.setAttribute('src',url+'?'+str + options.callback+'='+callback);
-oBody.appendChild(oScript);
-});
-return options.success;
+  format(data, options, function(str, callback) {
+    var oBody = document.getElementsByTagName('body')[0]
+    var oScript = document.createElement('script')
+    oScript.setAttribute(
+      'src',
+      url + '?' + str + options.callback + '=' + callback
+    )
+    oBody.appendChild(oScript)
+  })
+  return options.success
+}
+function format(data, options, callback) {
+  var callbackName = ''
+  var str = ''
+  for (var p in data) {
+    //格式化get提交的参数
+    str += p + '=' + data[p] + '&'
+  }
+  for (var p in options) {
+    if (options[p] == options.success) {
+      //取出要返回的函数名
+      callbackName = p
+      callback && callback(str, callbackName)
+    }
+  }
+}
 
-};
-function format(data,options,callback){
-var callbackName = '';
-var str = '';
-for(var p in data){//格式化get提交的参数
-str += p+'='+data[p]+'&';
-}
-for(var p in options){
-if(options[p] == options.success){//取出要返回的函数名
-callbackName = p;
-callback && callback(str,callbackName);
-}
-}
-}
 ```
 
 如果是这么写success:function(data){conosle.log(data);}
@@ -440,14 +446,6 @@ console.log(nodeArr instanceof Array)
 
 
 
-
-
-
-
-
-
-
-
 [](https://www.evernote.com/shard/s276/sh/4c926b86-f8c2-4a0e-9916-
 f053a77e221c/53c09ab091b793bbf55d9798ce39b6dd)
 
@@ -460,3 +458,234 @@ f053a77e221c/53c09ab091b793bbf55d9798ce39b6dd)
 
 [](https://www.evernote.com/shard/s276/sh/f843d47d-4b9a-436e-b0e9-
 105c5c9c1c26/71e9cf0204bc0bb3ac8c40347d5acf78)
+
+
+
+## css盒模型
+
+1. 基本概念
+
+   * content、border、padding、margin
+
+   * 标准盒模型
+   * IE盒模型
+
+2. 标准盒模型和IE盒模型的区别
+
+   两种盒模型的区别在于宽度和高度的计算方式不同：
+
+   标准盒模型：宽高就指的是content的宽高，不包含border和padding
+
+   IE盒模型：宽高则是由包含content，border，padding三部分组成
+
+3. CSS如何设置这两种模型
+
+   ```
+   box-sizing: content-box; 标准盒模型
+   bopx-sizing: border-box; IE盒模型
+   ```
+
+4. JS如何设置获取盒模型对应的宽和高
+
+   * 方式1
+     * 通过dom.style.width/height获取
+     * 只能获取内联样式的元素
+   * 方式2
+     * dom.currentStyle.width/height 只有IE支持
+   * 方式3
+     * window.getComputedStyle(dom).width/height
+   * 方式4
+     * dom.getBoundingClientRect() 得到一个元素在视口中的位置：left，top，width、height
+
+   
+
+5. 外边距重叠
+
+   * 相邻两元素同时设置的margin值，则最终margin会以最大的为准
+
+6. BFC
+
+   * BFC的概念
+     
+* 块级格式化上下文
+     
+* BFC的特性
+   
+     1. BFC的元素，不会影响外面的布局；外面的布局也不会影响BFC内部布局
+     2. BFC的元素，会在垂直方向叠加margin
+     3. BFC的区域不会与float的元素区域重叠
+  4. BFC元素计算高度，浮动元素也会参与计算
+   
+* BFC的创建
+   
+     1. float不为none
+     2. position的值不为static或relative
+     3. overflow不为visible
+  4. display值为inline-block、table-cell、table-caption
+   
+* BFC的应用
+   
+     1. 清除浮动（BFC在计算高度的时候，浮动元素也会参与计算）
+     2. 防止外边距重叠
+     * 给元素设置一个父级元素，并创建一个BFC
+   3. 实现布局（左右布局），（BFC元素区域不会与浮动元素重叠）
+     
+     
+
+## DOM事件
+
+1. 基本概念：dom事件的级别
+
+2. DOM事件模型
+   
+   * 捕获和冒泡
+   
+3. DOM事件流
+   * 捕获阶段
+   * 目标阶段
+   * 冒泡阶段
+   
+4. DOM事件捕获的具体流程
+
+   window -> document -> html(documentElement) -> body -> ... -> target -> ... window
+
+5. Event对象的应用
+
+   * 阻止默认行为 ev.preventDefault()
+   * 阻止冒泡 ev.stopPropagation()
+   * 获取事件源（事件代理） ev.target
+
+6. 自定义事件
+
+   ```
+   // 1. 事件的创建 EVent / CustomEvent(可以设置第二个参数对象)
+   var myEv = new Event("ev1")
+   // 2. 事件监听
+   ele.addEventListener("ev1", function() {
+   	console.log("ev1")
+   })
+   
+   // 3. 事件的触发
+   ele.dispathEvent(myEv)
+   ```
+
+   
+
+## HTTP协议类
+
+1. HTTP的特点
+
+   * 简单快速
+     * 每一个资源都有其对应的url(统一资源定位符)，只需要输入对应的url就能获取到对应的资源
+   * 灵活
+     * 通过设置HTTP协议头，可以完成对不同类型资源的传输
+   * 无连接
+     * 对连接状态不会进行保持
+   * 无状态
+     * 不会对用户状态进行保留
+
+2. HTTP报文的组成
+
+   * 请求报文
+     * 请求行
+       * 请求方式
+       * 请求路径
+       * 协议及版本
+     * 请求头
+     * 空行
+     * 请求体
+   * 响应报文
+     * 状态行
+       * 协议及版本
+       * 状态码
+       * 状态字
+     * 响应头
+     * 空行
+     * 响应体
+
+3. HTTP方法
+
+   * HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。
+
+   * HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法
+
+4. POST和GET的区别
+
+   * GET使用url传参，而POST是通过请求体传参
+   * GET比POST更不安全，参数信息直接暴露在url中
+   * GET请求url会主动被浏览器缓存，而POST不会
+   * GET请在浏览器中回退是无害的，而POST会再次请求
+   * GET请求支持url编码，而POST支持多种编码方式
+   * GET请求有长度限制，而post没有
+
+5. HTTP状态码
+
+   * 1xx：请求已接收，继续处理
+   * 2xx：请求已成功接收响应
+     * 200：请求成功/强缓存
+   * 3xx：重定向
+     * 301：永久重定向
+     * 302：临时重定向
+     * 304： 协商缓存
+   * 4xx：客户端错误
+     * 400 ： 请求错误
+     * 401：请求未授权
+     * 403：forbidden禁止访问
+     * 404：请求资源不存在
+   * 5xx：服务端错误
+     * 500：服务端错误
+
+## 原型链
+
+1. 创建对象的几种方式
+   * 字面量
+   * new Object()
+   * Object.create(obj)
+   * 工厂函数
+   * 构造函数
+2. 原型链
+3. 继承方式
+
+## 通信类
+
+1. ajax
+
+2. 同源策略
+
+   * 协议、域名、端口
+
+3. 跨域
+
+   限制：
+
+   * 不能进行ajax请求
+   * 无法获取dom
+   * 无法获取cookie、localstorage等
+
+   解决方案：
+
+   * JSOP
+   * CORS
+   * WebSocket
+   * proxy
+
+   页面间跨域：
+
+   * hash: onHashchange事件
+   * postMessage
+
+   
+
+## 安全
+
+1. xss 跨站脚本攻击
+2. corf 跨站请求伪造
+   * token验证
+   * Referer验证：判断页面来源
+   * 令牌
+
+## 算法
+
+1. 排序
+2. 递归
+3. 堆栈、队列、链表
