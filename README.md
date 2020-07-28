@@ -9,21 +9,21 @@
    * content、border、padding、margin
 
    * 标准盒模型
-   * IE盒模型
+   * IE盒模型（怪异盒模型）
 
 2. 标准盒模型和IE盒模型的区别
 
    两种盒模型的区别在于宽度和高度的计算方式不同：
 
-   标准盒模型：宽高就指的是content的宽高，不包含border和padding
+   * 标准盒模型：宽高就指的是content的宽高，不包含border和padding
 
-   IE盒模型：宽高则是由包含content，border，padding三部分组成
+   * IE盒模型：宽高则是由包含content，border，padding三部分组成
 
 3. CSS如何设置这两种模型
 
    ```
    box-sizing: content-box; 标准盒模型
-   bopx-sizing: border-box; IE盒模型
+   box-sizing: border-box; IE盒模型
    ```
 
 4. JS如何设置获取盒模型对应的宽和高
@@ -31,13 +31,32 @@
    * 方式1
      * 通过dom.style.width/height获取
      * 只能获取内联样式的元素
+     
    * 方式2
+     
      * dom.currentStyle.width/height 只有IE支持
-   * 方式3
+     
+   * 方式3*
+    
      * window.getComputedStyle(dom).width/height
-   * 方式4
+     
+   * 方式4*
+     
      * dom.getBoundingClientRect() 得到一个元素在视口中的位置：left，top，width、height
-
+     
+     ```
+     {
+       	width: 542
+       	height: 698
+       	bottom: 886
+     	left: 224
+     	right: 766
+     	top: 188
+     	x: 224
+     	y: 188
+     }
+     ```
+   
    
 
 ### 外边距重叠
@@ -46,10 +65,7 @@
 
 ### BFC
 
-* BFC的概念
-  
-
-* 块级格式化上下文
+* BFC的概念： 块级格式化上下文，表示一个独立的布局区域。
   
 * BFC的特性
   
@@ -68,13 +84,32 @@
 * BFC的应用
   
      1. 清除浮动（BFC在计算高度的时候，浮动元素也会参与计算）
-     2. 防止外边距重叠
-     * 给元素设置一个父级元素，并创建一个BFC
-   3. 实现布局（左右布局），（BFC元素区域不会与浮动元素重叠）
+     2. 避免外边距重叠： 给BFC元素设置一个父级元素
+     3. 自适应两栏布局（BFC元素区域不会与浮动元素重叠）
 
 ### 选择器优先级
 
 *  ！important > 行内样式 > id选择器 > class选择器 > tag选择器 > *通配符 > 继承 > 默认
+
+### Flex布局
+
+* flex : 默认0 1 auto，flex属性是flex-grow，flex-shrink与flex-basis三个属性的简写，用于定义项目放大，缩小与宽度。
+  * flex-grow : 默认0，用于决定项目在有剩余空间的情况下是否放大，默认不放大
+  * flex-shrink : 默认1，用于决定项目在空间不足时是否缩小，默认不缩小
+  * flex-basis ： 默认auto，用于设置项目宽度
+
+* flex-flow : flex-deriction与flex-wrap属性的简写，默认为row nowrap
+  * flex-direction : row(默认) | row-reverse | column | column-reverse
+  * flex-wrap : nowrap(默认) | wrap | wrap-reverse
+* justify-content： flex-start(默认) | flex-end | center | space-between | space-around | space-evenly 横轴的对齐方式
+* align-items ：flex-start | flex-end | center | baseline | stretch(默认)  纵轴排列方式
+
+
+
+* flex特殊取值解析
+  * flex: none    0 0 auto
+  * flex: auto     1 1 auto
+  * flex: 1            1  1 0%
 
 
 
@@ -168,14 +203,28 @@
 
 - 在内存中申请一块空间，生成一新对象
 - 将this指向这个新对象
-- 对this赋值，建立原型链接 obj.__proto__ = Construtor.prototype
+- 对this赋值，建立原型链接 obj._ _proto_ _ = Construtor.prototype
 - 返回这个新对象
 
 ### 源码分析
 
 慕课网课程“zepto设计和源码分析” 、jQuery源码解读
 
-### 原型链继承
+### 继承
+
+* 通过构造函数集成（子类构造函数内部通过对象冒充方式调用父类继承）
+
+  * 缺点：无法继承原型链
+
+* 通过原型链继承（子类原型对象为父类实例对象）
+
+  * 缺点： 无法为父类构造函数设置传递独立的值
+
+* 组合继承 （构造函数集成 + 原型链继承）
+
+* 拷贝继承（？）
+
+  
 
 ```javascript
 // 原型链继承
@@ -329,16 +378,16 @@ this 指向的是拥有当前执行环境的对象（当前正在执行的活动
 - 节流
 
   ```
-  function throttle(fn ,wait) {
-    let prev = Date.now();
+  function throttle(fn, delay = 500) {
+    let timer = null
     return function () {
-      let context = this;
-      let arg = arguments;
-      let now = Date.now();
-      if (now - prev > wait) {
-        fn.apply(context, arg);
-        prev = now;
-      }
+        if (timer) return;
+        fn.apply(this, arguments);
+        
+        timer = setTimeout(() => {
+            clearTimeout(timer)
+            timer = null
+        }, delay)
     }
   }
   
@@ -351,16 +400,17 @@ this 指向的是拥有当前执行环境的对象（当前正在执行的活动
 - 防抖
 
   ```
-  function debounce(fn, wait) {
-    let timer = null;
-    return function () {
-      let context = this;
-      let arg = arguments;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(function () {
-        fn.apply(context, arg);
-      }, wait)
-    }
+  function debounce(fn, interval) {
+      let timer = null
+      return function() {
+          timer && clearTimeout(timer)
+          let args = arguments
+          fn.apply(this, args)
+  
+          timer = setTimeout(() => {
+              fn.apply(this, args)
+          }, interval);
+      }
   }
   ```
 
@@ -397,8 +447,6 @@ console.log(nodeArr instanceof Array)
 
 - ES6 new Set()
 - 数组遍历赋值判断
-
-
 
 
 
@@ -465,13 +513,12 @@ cookie一般用于储存与用户相关的一些数据信息，每次HTTP请求�
 
 ### get和post的区别
 
-1. get长度有限，而post长度可以更长
-2. get的请求包含参数将会被cache 但是post 不会
-3. get的url能被存为标签但是post不能
-4. get只能进行url编码，post则可以多种编码
-5. get只接受ASCII字符 但是post没有限制
-6. get后退无害，但是post会出发再次请求
-7. get比post的安全性差，因为get参数直接暴露在url中
+- 传参方式：GET使用url传参，而POST是通过请求体传参
+- 安全性：GET比POST更不安全，参数信息直接暴露在url中
+- 缓存：GET请求url会主动被浏览器缓存，而POST不会
+- 回退：GET请在浏览器中回退是无害的，而POST会再次请求
+- 编码方式：GET请求支持url编码，而POST支持多种编码方式
+- 长度限制：GET请求有长度限制，而post没有
 
 ### ajax 封装
 
