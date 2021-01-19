@@ -37,7 +37,7 @@
      * dom.currentStyle.width/height 只有IE支持
      
    * 方式3*
-    
+   
      * window.getComputedStyle(dom).width/height
      
    * 方式4*
@@ -103,8 +103,6 @@
   * flex-wrap : nowrap(默认) | wrap | wrap-reverse
 * justify-content： flex-start(默认) | flex-end | center | space-between | space-around | space-evenly 横轴的对齐方式
 * align-items ：flex-start | flex-end | center | baseline | stretch(默认)  纵轴排列方式
-
-
 
 * flex特殊取值解析
   * flex: none    0 0 auto
@@ -183,7 +181,7 @@
 
 - 字面量
 - new Object()
-- Object.create(obj)
+- Object.create(obj)  // obj 作为返回对象的原型对象
 - 工厂函数
 - 构造函数
 
@@ -192,6 +190,7 @@
 * instanceOf
 * Object.prototype.toString.call(arr) === '[object Array]'
 * Array.isArray(arr) 
+* arr.constructor === Array
 
 ### instanceof原理
 
@@ -223,6 +222,8 @@
 * 组合继承 （构造函数集成 + 原型链继承）
 
 * 拷贝继承（？）
+
+* ES6  Class类
 
   
 
@@ -421,6 +422,26 @@ this 指向的是拥有当前执行环境的对象（当前正在执行的活动
   - 展开运算符...
 - 深拷贝：建立一个新对象并赋值，修改时源对象不受影响
   - JSON.parse(JSON.stringry( obj ))：性能最好
+    * undefined / Symbol / function丢失
+    * Error / RegExp {}
+    * NaN、Infinity和-Infinity  变成 null
+    * 时间对象=>字符串的形式
+    * 实例对象丢失constructor
+
+    ```
+    let obj = {
+        und: undefined, // 丢失
+        sym: Symbol('sym'), // 丢失
+        fun: () => {},   // 丢失
+        nan: NaN,  // null
+        inf: Infinity, // null
+        err: new Error('error message'), // {}
+        reg: /abc/, // {}
+        cla: new Ctest(),  // {name: "zs"}
+        date: new Date(), // "2021-01-12T05:39:54.991Z"
+    }
+    ```
+
   - 递归判断类型，赋值 
 
 ### 伪数组转数组
@@ -470,7 +491,7 @@ sessionStorage仅在当前会话下有效，关闭页面或浏览器后被清除
 
 #### 作用域不同
 
-​	不同浏览器无法共享localStorage或sessionStorage中的信息。相同浏览器的同源页面间可以共享相同的 localStorage，但无法共享sessionStorage的信息。
+​	不同浏览器无法共享localStorage或sessionStorage中的信息。相同浏览器的同源页面间可以共享相同的 localStorage，但无法共享sessionStorage的信息。]
 
 #### Cookie
 
