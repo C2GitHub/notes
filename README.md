@@ -48,7 +48,6 @@
 
 * BFC的概念
   
-
 * 块级格式化上下文
   
 * BFC的特性
@@ -85,7 +84,7 @@
 1. 基本概念：dom事件的级别
 
 2. DOM事件模型
-   
+  
    * 捕获和冒泡
    
 3. DOM事件流
@@ -433,7 +432,27 @@ cookie一般用于储存与用户相关的一些数据信息，每次HTTP请求�
 1. 因为每次HTTP请求都携带会cookie到服务器端，如果使用cookie保存过多数据势必会增大带宽，带来性能问题。
 2. 安全性，因为cookie存储在浏览器端，所以就存在被拦截的可能。所以不能cookie来保存用户一些太私密的信息。可以用服务器端session来保存。
 
+### 重绘与回流
 
+* Reflow 回流(重排)
+  * 定义
+    * Dom结构中的每个元素都有自己的盒子模型
+    * 每个盒子模型在页面中出现的具体位置，都是由其相关的各种样式计算出来的
+    * 如果某个属性触发了该元素在页面中的布局发生改变，就会触发回流
+  * 触发reflow
+    * 添加、修改、或删除DOM节点时，会导致reflow或repaint
+    * 移动dom节点位置，比如动画
+    * 修改布局相关css样式属性
+    * resize窗口，或者滚动
+    * 修改网页默认字体
+* Repaint 重绘
+  * 定义
+    * 当各种盒子的位置、大小，颜色以及其他属性确定下来以后，浏览器便会把这些元素按照各自特性绘制一遍，最终呈现到页面，该过程称之为repaint
+  * 触发repaint
+    * dom改动
+    * css改动
+
+`重绘不一定回流、回流一定重绘！`
 
 ## 通信类
 
@@ -652,11 +671,39 @@ function format(data, options, callback) {
 
 ## 安全
 
+### 前端安全攻击
+
 1. xss 跨站脚本攻击
 2. corf 跨站请求伪造
    * token验证
    * Referer验证：判断页面来源
    * 令牌
+
+### 错误监控
+
+#### 错误类别
+
+1. 即时运行错误：代码错误
+2. 资源加载错误
+
+#### 捕获方式
+
+1. 即时运行错误捕获方式
+   * try...catch
+   * window.onerror
+
+2. 资源加载错误
+   * object.onerror
+   * performance.getEntries()
+   * Error事件捕获（window.addEventLitener('error', fn, true)）
+     * 资源error不会冒泡，无法通过window.onerror冒泡捕获
+     * 可以通过事件的捕获阶段捕获
+
+### 错误上报
+
+1. 利用Ajax通讯
+2. 利用Image对象
+   * new Image并设置src(不需要放置到页面上)
 
 ## 算法
 
@@ -664,7 +711,38 @@ function format(data, options, callback) {
 2. 递归
 3. 堆栈、队列、链表
 
+## 性能
 
+### 页面性能优化
+
+1. 资源压缩合并，减少HTTP请求
+2. 非核心代码异步加载
+3. 利用浏览器缓存
+4. 使用cdn
+5. 预解析
+
+### 异步加载方式
+
+1. 方式
+   * 动态创建script标签
+   * async
+   * defer
+2. 区别
+   * async是在页面加载完后立即执行，如果是多个，执行顺序与加载顺序无关
+   * defer是在HTML解析完后才会执行，如果是多个，按照加载顺序依次执行
+
+### 浏览器缓存
+
+1. 强缓存
+   * header
+     * Expires
+     * Cache-Control
+2. 协商缓存
+   * header
+     * Last-modified（下发）  
+     * If-Modified-Since （上传）
+     * Etag
+     * If-None-Match
 
 ## 学习链接
 
