@@ -16,14 +16,29 @@
 4. vue中data为什么必须是函数
 
    * 为了保证组件在多次调用的时候拥有独立的数据空间
-   * 组件没调用一次，data函数会返回一个新的数据对象
+   * 组件每调用一次，data函数会返回一个新的数据对象
    * 保证相同组件之间的数据互不干涉
 
 5. nextTick的作用
 
    * vue中dom更新是异步的
+
    * 对应一些我们需要dom操作的场景，必须保证dom的时效性
+
    * 这个时候就可以使用nextTick接口，nexttick的触发是下一次dom更新之后执行，所以通过这个接口可以保证操作的是最新的dom
+
+   * 原理： 
+
+     ```
+     // 创建一个观察器实例并传入回调函数
+     const observer = new MutationObserver(callback);
+     
+     // 以上述配置开始观察目标节点
+     observer.observe(targetNode, config);
+     
+     // 之后，可停止观察
+     observer.disconnect();
+     ```
 
 6. keep-alive的作用
 
@@ -57,9 +72,9 @@
    * watch用户监听数据的变化，当监听数据改变，会立即触发watch的执行
    * 主要数据来源有data,props,computed
    * watch提供两个参数（newValue, oldValue）
-
-   * computed本身是一个方法，当做属性的方式使用
+* computed本身是一个方法，当做属性的方式使用
    * computed函数必须有返回值，内部可以进行一些逻辑运算
+   * computed 内部不能处理异步任务
    * computed会计算结果进行缓存，只有数据改变才会触发computed 的再次执行，多次调用不会触发重复执行
    * computed默认只支持getter方法，如果需要实现双向数据绑定需要手动设置setter
    * methods中可以定义多个进行逻辑处理的函数，methods中的方法每调用一次就会立即执行一次
@@ -67,10 +82,17 @@
 10. 组件间传值
 
     1. props：父传子
-    2. $emit：子传父
-    3. provide/inject ：祖先组件provide, 子孙组件inject
-    4. $bus
-    5. vuex
+    2. $attrs : 获取没有被props接受的参数
+    3. $emit：子传父
+    4. listeners ：
+       * 父作用域中的 (不含 `.native` 修饰器的) `v-on` 事件监听器
+       * 通过 `v-on="$listeners"` 传入内部组件
+    5. provide/inject ：祖先组件provide, 子孙组件inject
+    6. $parent / $children 或 $refs 访问组件实例
+    7. $bus
+       * EventBus.$emit("editName", this.name)
+       * EventBus.$on('editName', (name) => {  })
+    8. vuex
 
 11. vue生命周期
 
@@ -112,10 +134,15 @@
 
 13. vue-router的实现原理
 
+    * hash 模式
+      * window.onhashchange
+    * history 模式
+      * history.pushState
+      * history.replaceState
+      * window.onpopstate
+
 14. 路由守卫
 
 15. vuex的原理
 
 16. 什么是虚拟dom
-
-17. vue中怎样进行性能优化
